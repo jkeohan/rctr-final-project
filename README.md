@@ -1,4 +1,4 @@
-# rctr-final-project
+# React Part Time Class Final Project
 
 # Project Overview
 
