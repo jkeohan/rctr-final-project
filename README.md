@@ -1,7 +1,5 @@
 # React Part Time Class Final Project
 
-# Project Overview
-
 ## Project Links
 
 - [CodeSandbox Link]()
