@@ -3,12 +3,17 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol"; // TODO: remove?
+
+import "./interfaces/IExchange.sol";
 import "./interfaces/IFactory.sol";
 
-contract Exchange is ERC20 {
+contract Exchange is ERC20, IExchange {
     using SafeMath for uint256; // TODO: use this for math?
 
+    // Token for exchange with ETH
     IERC20 token;
+
+    // FIXME:
     IFactory factory;
 
     constructor(address token_address) ERC20("Sandman Swap", "DREAM") {
@@ -21,7 +26,11 @@ contract Exchange is ERC20 {
         factory = IFactory(msg.sender);
     }
 
-    function ethToTokenExchange(uint256 desiredTokenAmount) public payable {
+    function ethToTokenExchange(uint256 desiredTokenAmount)
+        public
+        payable
+        override
+    {
         require(
             desiredTokenAmount > 0,
             "ethToTokenExchange: desiredTokenAmount too small"
@@ -44,6 +53,7 @@ contract Exchange is ERC20 {
     function tokenToEthExchange(uint256 tokenAmount, uint256 desiredEthAmount)
         public
         payable
+        override
     {
         require(
             tokenAmount > 0 && desiredEthAmount > 0,
@@ -68,6 +78,7 @@ contract Exchange is ERC20 {
     function addLiquidity(uint256 tokensDeposit)
         public
         payable
+        override
         returns (uint256)
     {
         require(
@@ -104,6 +115,7 @@ contract Exchange is ERC20 {
 
     function removeLiquidity(uint256 lpAmount)
         public
+        override
         returns (uint256, uint256)
     {
         require(lpAmount > 0, "removeLiquidity: lpAmount too small");
@@ -120,12 +132,16 @@ contract Exchange is ERC20 {
         return (ethWithdraw, tokensWithdraw);
     }
 
-    function getTokenBalance() public view returns (uint256) {
+    /**
+     * @notice Token reserves balance.
+     * @return Token balance.
+     */
+    function getTokenBalance() private view returns (uint256) {
         return token.balanceOf(address(this));
     }
 
     /**
-     * @notice Amount for ETH-to-Token or Token-to-ETH conversion.
+     * @notice Amount for ETH-to-Token or Token-to-ETH conversion (includes 0.03% fee).
      * @param sellAmount Amount of ETH or Tokens being sold.
      * @param sellReserve Amount of ETH or Tokens in reserves.
      * @param buyReserve Amount of Tokens or ETH in reserves.
@@ -141,6 +157,10 @@ contract Exchange is ERC20 {
             "getExchangePrice: invalid reserve amounts"
         );
 
-        return (sellAmount * buyReserve) / (sellReserve + sellAmount);
+        uint256 sellAmountWithFee = sellAmount * 997;
+        uint256 numerator = (sellAmountWithFee * buyReserve);
+        uint256 denominator = buyReserve * 1000 + sellAmountWithFee;
+
+        return numerator / denominator;
     }
 }

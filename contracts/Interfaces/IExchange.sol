@@ -12,7 +12,7 @@ interface IExchange {
      * @param tokenAmount Amount of Tokens provided.
      * @param desiredEthAmount Amount of ETH to exchange for.
      */
-    function ethToTokenExchange(uint256 tokenAmount, uint256 desiredEthAmount)
+    function tokenToEthExchange(uint256 tokenAmount, uint256 desiredEthAmount)
         external
         payable;
 
@@ -34,10 +34,4 @@ interface IExchange {
     function removeLiquidity(uint256 lpAmount)
         external
         returns (uint256, uint256);
-
-    /**
-     * @notice Token reserves balance.
-     * @return Token balance.
-     */
-    function getTokenBalance() external view returns (uint256);
 }
