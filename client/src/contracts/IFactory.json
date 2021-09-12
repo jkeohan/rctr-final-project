@@ -1,0 +1,115 @@
+{
+  "contractName": "IFactory",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Interfaces/IFactory.sol\":\"IFactory\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Interfaces/IFactory.sol\":{\"keccak256\":\"0x7d54d38fdaf7fd70aea5f31a8e9bb98120a50cc9c87bb46ac2f11d80b916077b\",\"urls\":[\"bzz-raw://2328eb5af773b26eb989afd9e5671d10db37bc6eaba54278944ececcf6ad0470\",\"dweb:/ipfs/QmPxSpJAiMy5BTNiJWr4MDwF4YurmRDbHxRixVZ77HAavX\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.8.7;\r\n\r\ninterface IFactory {}\r\n",
+  "sourcePath": "/mnt/f/documents/Code/rctr-final-project/contracts/Interfaces/IFactory.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Interfaces/IFactory.sol",
+    "exportedSymbols": {
+      "IFactory": [
+        694
+      ]
+    },
+    "id": 695,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 693,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:8"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "id": 694,
+        "linearizedBaseContracts": [
+          694
+        ],
+        "name": "IFactory",
+        "nameLocation": "37:8:8",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 695,
+        "src": "27:21:8",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:50:8"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/Interfaces/IFactory.sol",
+    "exportedSymbols": {
+      "IFactory": [
+        694
+      ]
+    },
+    "id": 695,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 693,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:8"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "id": 694,
+        "linearizedBaseContracts": [
+          694
+        ],
+        "name": "IFactory",
+        "nameLocation": "37:8:8",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 695,
+        "src": "27:21:8",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:50:8"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.7+commit.e28d00a7.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-09-12T02:16:01.299Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

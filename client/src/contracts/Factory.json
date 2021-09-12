@@ -1,0 +1,123 @@
+{
+  "contractName": "Factory",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Factory.sol\":\"Factory\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Factory.sol\":{\"keccak256\":\"0xd75809bf55bd6a18d5f7932b1fa5dca3e0cf31be2668e42085667865bdf6dce1\",\"urls\":[\"bzz-raw://1a6931c97a2a3f815bc34fe7fd7c7e3b079d92f6719447bbdbc5883c9fb335e4\",\"dweb:/ipfs/QmfHtnFgxQEhV172uqF7BtjF12tyFYB8W7kqJpCRjBgC4K\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220db044203fc44e70c966db6c1f54a9c6a86456258135e6f661a1e2e964d51f08b64736f6c63430008070033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220db044203fc44e70c966db6c1f54a9c6a86456258135e6f661a1e2e964d51f08b64736f6c63430008070033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "27:19:5:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "27:19:5:-:0;;;;;",
+  "source": "pragma solidity ^0.8.7;\r\n\r\ncontract Factory {}\r\n",
+  "sourcePath": "/mnt/f/documents/Code/rctr-final-project/contracts/Factory.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Factory.sol",
+    "exportedSymbols": {
+      "Factory": [
+        677
+      ]
+    },
+    "id": 678,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 676,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:5"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 677,
+        "linearizedBaseContracts": [
+          677
+        ],
+        "name": "Factory",
+        "nameLocation": "36:7:5",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 678,
+        "src": "27:19:5",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:48:5"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/Factory.sol",
+    "exportedSymbols": {
+      "Factory": [
+        677
+      ]
+    },
+    "id": 678,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 676,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:5"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 677,
+        "linearizedBaseContracts": [
+          677
+        ],
+        "name": "Factory",
+        "nameLocation": "36:7:5",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 678,
+        "src": "27:19:5",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:48:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.7+commit.e28d00a7.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x890fdE41b26146eE42792f1f5FB6dFdDB869328E",
+      "transactionHash": "0x5bcb03e71ff0c30e7722dadb1025065f6c6de56e8a16d0154a4a8268348a40f2"
+    }
+  },
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-09-12T02:24:43.663Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "contractName": "IExchange",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Interfaces/IExchange.sol\":\"IExchange\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Interfaces/IExchange.sol\":{\"keccak256\":\"0xc00bf31328c39925888ef218d7f77a5ca4e2f63c32fad8646470c91eb08d4964\",\"urls\":[\"bzz-raw://94a0d04a0c3274b8170e8aaa8773dafa77b2598873c1711990b3c45585d554c6\",\"dweb:/ipfs/Qmd5FopjT2xVTocjFYZRozASjVrpd8NfoM6XCKpfZ5154A\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.8.7;\r\n\r\ninterface IExchange {}\r\n",
+  "sourcePath": "/mnt/f/documents/Code/rctr-final-project/contracts/Interfaces/IExchange.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Interfaces/IExchange.sol",
+    "exportedSymbols": {
+      "IExchange": [
+        691
+      ]
+    },
+    "id": 692,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 690,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:7"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "id": 691,
+        "linearizedBaseContracts": [
+          691
+        ],
+        "name": "IExchange",
+        "nameLocation": "37:9:7",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 692,
+        "src": "27:22:7",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:51:7"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/Interfaces/IExchange.sol",
+    "exportedSymbols": {
+      "IExchange": [
+        691
+      ]
+    },
+    "id": 692,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 690,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:7"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "id": 691,
+        "linearizedBaseContracts": [
+          691
+        ],
+        "name": "IExchange",
+        "nameLocation": "37:9:7",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 692,
+        "src": "27:22:7",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:51:7"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.7+commit.e28d00a7.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-09-12T02:16:01.290Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

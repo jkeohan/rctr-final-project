@@ -1,0 +1,153 @@
+{
+  "contractName": "Exchange",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Exchange.sol\":\"Exchange\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x027b891937d20ccf213fdb9c31531574256de774bda99d3a70ecef6e1913ed2a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://087318b21c528119f649899f5b5580566dd8d7b0303d4904bd0e8580c3545f14\",\"dweb:/ipfs/Qmbn5Mj7aUn8hJuQ8VrQjjEXRsXyJKykgnjR9p4C3nfLtL\"]},\"project:/contracts/Exchange.sol\":{\"keccak256\":\"0xaa5e3ab02ca4c0fb923dd7941e208c871a5811a5c537752a0b08f971fe151deb\",\"urls\":[\"bzz-raw://aab875a70e1aa87425bde45e6b7d5b5a39972eed3155810353fcc4518583753f\",\"dweb:/ipfs/QmPz5ZPa8ScTNPikGfY7sXT9c69RttxQYvcYues4hfxfmb\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220d3ac5f9213bb3364847551197355c01811b7875d2c35a9d756abef14359593bd64736f6c63430008070033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220d3ac5f9213bb3364847551197355c01811b7875d2c35a9d756abef14359593bd64736f6c63430008070033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "83:20:4:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "83:20:4:-:0;;;;;",
+  "source": "pragma solidity ^0.8.7;\n\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\n\ncontract Exchange {}\n",
+  "sourcePath": "/mnt/f/documents/Code/rctr-final-project/contracts/Exchange.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Exchange.sol",
+    "exportedSymbols": {
+      "Exchange": [
+        674
+      ],
+      "IERC20": [
+        623
+      ]
+    },
+    "id": 675,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 672,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:4"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "id": 673,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 675,
+        "sourceUnit": 624,
+        "src": "25:56:4",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 674,
+        "linearizedBaseContracts": [
+          674
+        ],
+        "name": "Exchange",
+        "nameLocation": "92:8:4",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 675,
+        "src": "83:20:4",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:104:4"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/Exchange.sol",
+    "exportedSymbols": {
+      "Exchange": [
+        674
+      ],
+      "IERC20": [
+        623
+      ]
+    },
+    "id": 675,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 672,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:4"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "id": 673,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 675,
+        "sourceUnit": 624,
+        "src": "25:56:4",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 674,
+        "linearizedBaseContracts": [
+          674
+        ],
+        "name": "Exchange",
+        "nameLocation": "92:8:4",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 675,
+        "src": "83:20:4",
+        "usedErrors": []
+      }
+    ],
+    "src": "0:104:4"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.7+commit.e28d00a7.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x1134Ab911bcCBB058118d09ef87FC15F5d10aB37",
+      "transactionHash": "0x0010bab960e994023cfd375d2be5406317a3a4935ac964c301ef2bfa17f59fa1"
+    }
+  },
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-09-12T02:24:43.654Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
