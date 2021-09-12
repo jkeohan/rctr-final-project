@@ -28,7 +28,7 @@ contract Exchange is ERC20 {
     {
         require(
             tokensDeposit > 0 && msg.value > 0,
-            "addLiquidity: invalid argument"
+            "addLiquidity: deposit amount too small"
         );
 
         if (getTokenBalance() == 0) {
@@ -62,7 +62,7 @@ contract Exchange is ERC20 {
         public
         returns (uint256, uint256)
     {
-        require(lpAmount > 0, "removeLiquidity: invalid argument");
+        require(lpAmount > 0, "removeLiquidity: lpAmount too small");
 
         uint256 ethWithdraw = (address(this).balance * lpAmount) /
             totalSupply();
@@ -78,5 +78,68 @@ contract Exchange is ERC20 {
 
     function getTokenBalance() public view returns (uint256) {
         return token.balanceOf(address(this));
+    }
+
+    /**
+     * @notice Get exchange rate for ETH to Tokens.
+     * @param ethAmount ETH to sell for Tokens.
+     * @return Token exchange amount.
+     */
+    function getTokenExchangeAmount(uint256 ethAmount)
+        private
+        view
+        returns (uint256)
+    {
+        require(ethAmount > 0, "getTokenExchangeAmount: ethAmount too small");
+
+        return
+            getExchangeAmount(
+                ethAmount,
+                address(this).balance,
+                getTokenBalance()
+            );
+    }
+
+    /**
+     * @notice Get exchange rate for Tokens to ETH.
+     * @param tokenAmount Tokens to sell for ETH.
+     * @return ETH exchange amount.
+     */
+    function getEthExchangeAmount(uint256 tokenAmount)
+        private
+        view
+        returns (uint256)
+    {
+        require(
+            tokenAmount > 0,
+            "getTokenExchangeAmount: tokenAmount too small"
+        );
+
+        return
+            getExchangeAmount(
+                tokenAmount,
+                getTokenBalance(),
+                address(this).balance
+            );
+    }
+
+    /**
+     * @notice Amount for ETH-to-Token or Token-to-ETH conversion.
+     * @param sellAmount Amount of ETH or Tokens being sold.
+     * @param sellReserve Amount of ETH or Tokens in reserves.
+     * @param buyReserve Amount of Tokens or ETH in reserves.
+     * @return Amount of ETH or Tokens.
+     */
+    function getExchangeAmount(
+        uint256 sellAmount,
+        uint256 sellReserve,
+        uint256 buyReserve
+    ) private pure returns (uint256) {
+        require(
+            sellReserve > 0 && buyReserve > 0,
+            "getExchangePrice: invalid reserve amounts"
+        );
+
+        return (sellAmount * buyReserve) / (sellReserve + sellAmount);
     }
 }

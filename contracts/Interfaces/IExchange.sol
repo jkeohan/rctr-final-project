@@ -21,8 +21,7 @@ interface IExchange {
         returns (uint256, uint256);
 
     /**
-     * @notice Exchange Token balance,
-     * @dev
+     * @notice Exchange Token balance.
      * @return Token balance.
      */
     function getTokenBalance() external view returns (uint256);
