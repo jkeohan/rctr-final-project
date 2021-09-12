@@ -1,7 +1,9 @@
+# Node modules and packages
 node_modules/
 
+# Compiled contract abis
 bin/
 
+# Project settings
 .vscode
-
 TODO.md

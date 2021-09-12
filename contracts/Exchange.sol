@@ -97,6 +97,7 @@ contract Exchange is ERC20, IExchange {
     function ethToTokenTransfer(uint256 desiredTokenAmount, address recipient)
         external
         payable
+        override
     {
         ethToTokenTransferHelper(desiredTokenAmount, recipient);
     }
