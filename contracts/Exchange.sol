@@ -2,18 +2,17 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol"; // TODO: remove?
+// import "@openzeppelin/contracts/utils/math/SafeMath.sol"; // TODO: remove?
 
 import "./interfaces/IExchange.sol";
 import "./interfaces/IFactory.sol";
 
 contract Exchange is ERC20, IExchange {
-    using SafeMath for uint256; // TODO: use this for math?
+    // using SafeMath for uint256; // TODO: use this for math?
 
     // Token for exchange with ETH
     IERC20 token;
-
-    // FIXME:
+    // Exchange manager for Token-to-Token exchanges.
     IFactory factory;
 
     constructor(address token_address) ERC20("Sandman Swap", "DREAM") {
@@ -31,23 +30,7 @@ contract Exchange is ERC20, IExchange {
         payable
         override
     {
-        require(
-            desiredTokenAmount > 0,
-            "ethToTokenExchange: desiredTokenAmount too small"
-        );
-
-        uint256 tokensAmount = getExchangeAmount(
-            msg.value,
-            address(this).balance - msg.value,
-            getTokenBalance()
-        );
-
-        require(
-            tokensAmount >= desiredTokenAmount,
-            "ethToTokenExchange: not enough tokens"
-        );
-
-        token.transfer(msg.sender, tokensAmount);
+        ethToTokenTransferHelper(desiredTokenAmount, msg.sender);
     }
 
     function tokenToEthExchange(uint256 tokenAmount, uint256 desiredEthAmount)
@@ -73,6 +56,49 @@ contract Exchange is ERC20, IExchange {
 
         payable(msg.sender).transfer(ethAmount);
         token.transferFrom(msg.sender, address(this), tokenAmount);
+    }
+
+    function tokenToTokenExchange(
+        uint256 tokenAmount,
+        uint256 desiredOtherTokenAmount,
+        address otherTokenAddress
+    ) external payable override {
+        require(
+            tokenAmount > 0 && desiredOtherTokenAmount > 0,
+            "tokenToTokenExchange: token amounts too small"
+        );
+        require(
+            otherTokenAddress != address(0),
+            "tokenToTokenExchange: invalid token2Address"
+        );
+
+        address otherTokenExchangeAddress = factory.getExchange(
+            otherTokenAddress
+        );
+
+        require(
+            otherTokenExchangeAddress != address(this) &&
+                otherTokenExchangeAddress != address(0),
+            "tokenToTokenExchange: token2Address is not an exchange"
+        );
+
+        uint256 ethAmount = getExchangeAmount(
+            tokenAmount,
+            getTokenBalance(),
+            address(this).balance
+        );
+
+        token.transferFrom(msg.sender, address(this), tokenAmount);
+        IExchange(otherTokenExchangeAddress).ethToTokenTransfer{
+            value: ethAmount
+        }(desiredOtherTokenAmount, msg.sender);
+    }
+
+    function ethToTokenTransfer(uint256 desiredTokenAmount, address recipient)
+        external
+        payable
+    {
+        ethToTokenTransferHelper(desiredTokenAmount, recipient);
     }
 
     function addLiquidity(uint256 tokensDeposit)
@@ -130,6 +156,34 @@ contract Exchange is ERC20, IExchange {
         token.transferFrom(address(this), msg.sender, tokensWithdraw);
 
         return (ethWithdraw, tokensWithdraw);
+    }
+
+    /**
+     * @notice Echanges ETH for Tokens for recipient.
+     * @param desiredTokenAmount Amount of tokens to exchange for.
+     * @param recipient Address of recipient.
+     */
+    function ethToTokenTransferHelper(
+        uint256 desiredTokenAmount,
+        address recipient
+    ) private {
+        require(
+            desiredTokenAmount > 0,
+            "ethToTokenTransfer: desiredTokenAmount too small"
+        );
+
+        uint256 tokenAmount = getExchangeAmount(
+            msg.value,
+            address(this).balance - msg.value,
+            getTokenBalance()
+        );
+
+        require(
+            tokenAmount >= desiredTokenAmount,
+            "ethToTokenExchange: not enough tokens"
+        );
+
+        token.transfer(recipient, tokenAmount);
     }
 
     /**

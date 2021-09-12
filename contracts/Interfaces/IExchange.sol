@@ -17,6 +17,27 @@ interface IExchange {
         payable;
 
     /**
+     * @notice Exchange Tokens for ETH.
+     * @param tokenAmount Amount of Token 1 provided.
+     * @param desiredOtherTokenAmount Amount of Token 2 to exchange for.
+     * @param otherTokenAddress Address of Token 2 contract.
+     */
+    function tokenToTokenExchange(
+        uint256 tokenAmount,
+        uint256 desiredOtherTokenAmount,
+        address otherTokenAddress
+    ) external payable;
+
+    /**
+     * @notice Exchange ETH for Tokens.
+     * @param desiredTokenAmount Amount of tokens to exchange for.
+     * @param recipient Address of recipient.
+     */
+    function ethToTokenTransfer(uint256 desiredTokenAmount, address recipient)
+        external
+        payable;
+
+    /**
      * @notice Deposit ETH & Tokens to mint DREAM (LP-tokens).
      * @param tokensDeposit Amount of tokens to deposit.
      * @return Amount of DREAM minted.
