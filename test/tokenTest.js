@@ -1,3 +1,5 @@
+var assert = require('assert');
+
 const SampleToken1 = artifacts.require("./SampleToken1.sol");
 
 contract("SampleToken1", accounts => {

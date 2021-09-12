@@ -11,9 +11,9 @@ contract Exchange is ERC20, IExchange {
     // using SafeMath for uint256; // TODO: use this for math?
 
     // Token for exchange with ETH
-    IERC20 token;
+    IERC20 public token;
     // Exchange manager for Token-to-Token exchanges.
-    IFactory factory;
+    address public factory;
 
     constructor(address token_address) ERC20("Sandman Swap", "DREAM") {
         require(
@@ -22,7 +22,7 @@ contract Exchange is ERC20, IExchange {
         );
 
         token = IERC20(token_address);
-        factory = IFactory(msg.sender);
+        factory = msg.sender;
     }
 
     function ethToTokenExchange(uint256 desiredTokenAmount)
@@ -72,7 +72,7 @@ contract Exchange is ERC20, IExchange {
             "tokenToTokenExchange: invalid token2Address"
         );
 
-        address otherTokenExchangeAddress = factory.getExchange(
+        address otherTokenExchangeAddress = IFactory(factory).getExchange(
             otherTokenAddress
         );
 
