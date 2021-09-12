@@ -125,49 +125,6 @@ contract Exchange is ERC20 {
     }
 
     /**
-     * @notice Get exchange rate for ETH to Tokens.
-     * @param ethAmount ETH to sell for Tokens.
-     * @return Token exchange amount.
-     */
-    function getTokenExchangeAmount(uint256 ethAmount)
-        private
-        view
-        returns (uint256)
-    {
-        require(ethAmount > 0, "getTokenExchangeAmount: ethAmount too small");
-
-        return
-            getExchangeAmount(
-                ethAmount,
-                address(this).balance,
-                getTokenBalance()
-            );
-    }
-
-    /**
-     * @notice Get exchange rate for Tokens to ETH.
-     * @param tokenAmount Tokens to sell for ETH.
-     * @return ETH exchange amount.
-     */
-    function getEthExchangeAmount(uint256 tokenAmount)
-        private
-        view
-        returns (uint256)
-    {
-        require(
-            tokenAmount > 0,
-            "getTokenExchangeAmount: tokenAmount too small"
-        );
-
-        return
-            getExchangeAmount(
-                tokenAmount,
-                getTokenBalance(),
-                address(this).balance
-            );
-    }
-
-    /**
      * @notice Amount for ETH-to-Token or Token-to-ETH conversion.
      * @param sellAmount Amount of ETH or Tokens being sold.
      * @param sellReserve Amount of ETH or Tokens in reserves.
