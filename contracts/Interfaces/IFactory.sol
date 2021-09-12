@@ -11,7 +11,7 @@ interface IFactory {
     /**
      * @notice Gets exchange for the provided Token.
      * @param tokenAddress The address of the Token exchange being searched for.
-     * @return The address of the newly exchange.
+     * @return The address of the exchange.
      */
     function getExchange(address tokenAddress) external view returns (address);
 }

@@ -9,7 +9,7 @@ contract("SampleToken1", accounts => {
         sampleToken1 = await SampleToken1.new("SampleToken1", "TOK1", 100);
     });
 
-    it("Ccorrect name and symbol", async () => {
+    it("Correct name and symbol", async () => {
         const name = await sampleToken1.name();
         assert.equal(name, "SampleToken1");
 
@@ -26,12 +26,12 @@ contract("SampleToken1", accounts => {
     });
 
     it("Transfer the correct amount", async () => {
-        const result = await sampleToken1.transfer(accounts[1], 50);
+        await sampleToken1.transfer(accounts[1], 50);
         const balance = await sampleToken1.balanceOf(accounts[1]);
         assert.equal(balance, 50);
     });
 
-    it("Throws an error when trying to transfer more than balance", async () => {
+    it("Error trying to transfer more than balance", async () => {
         try {
             await sampleToken1.transfer(accounts[1], 101);
             assert.fail();
