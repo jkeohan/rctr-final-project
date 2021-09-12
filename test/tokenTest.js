@@ -5,7 +5,7 @@ contract("SampleToken1", accounts => {
 
     let sampleToken1;
     
-    beforeEach('Setup contract for each test', async function () {
+    beforeEach('Setup contract for each test',  async () => {
         sampleToken1 = await SampleToken1.new("SampleToken1", "TOK1", 100);
     });
 
