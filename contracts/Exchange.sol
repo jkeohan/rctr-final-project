@@ -21,6 +21,50 @@ contract Exchange is ERC20 {
         factory = IFactory(msg.sender);
     }
 
+    function ethToTokenExchange(uint256 desiredTokenAmount) public payable {
+        require(
+            desiredTokenAmount > 0,
+            "ethToTokenExchange: desiredTokenAmount too small"
+        );
+
+        uint256 tokensAmount = getExchangeAmount(
+            msg.value,
+            address(this).balance - msg.value,
+            getTokenBalance()
+        );
+
+        require(
+            tokensAmount >= desiredTokenAmount,
+            "ethToTokenExchange: not enough tokens"
+        );
+
+        token.transfer(msg.sender, tokensAmount);
+    }
+
+    function tokenToEthExchange(uint256 tokenAmount, uint256 desiredEthAmount)
+        public
+        payable
+    {
+        require(
+            tokenAmount > 0 && desiredEthAmount > 0,
+            "tokenToEthExchange: exchange amount too small"
+        );
+
+        uint256 ethAmount = getExchangeAmount(
+            tokenAmount,
+            getTokenBalance(),
+            address(this).balance
+        );
+
+        require(
+            ethAmount >= desiredEthAmount,
+            "tokenToEthExchange: not enough eth"
+        );
+
+        payable(msg.sender).transfer(ethAmount);
+        token.transferFrom(msg.sender, address(this), tokenAmount);
+    }
+
     function addLiquidity(uint256 tokensDeposit)
         public
         payable

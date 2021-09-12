@@ -2,6 +2,21 @@ pragma solidity ^0.8.7;
 
 interface IExchange {
     /**
+     * @notice Exchange ETH for Tokens.
+     * @param desiredTokenAmount Amount of tokens to exchange for.
+     */
+    function ethToTokenExchange(uint256 desiredTokenAmount) external payable;
+
+    /**
+     * @notice Exchange Tokens for ETH.
+     * @param tokenAmount Amount of Tokens provided.
+     * @param desiredEthAmount Amount of ETH to exchange for.
+     */
+    function ethToTokenExchange(uint256 tokenAmount, uint256 desiredEthAmount)
+        external
+        payable;
+
+    /**
      * @notice Deposit ETH & Tokens to mint DREAM (LP-tokens).
      * @param tokensDeposit Amount of tokens to deposit.
      * @return Amount of DREAM minted.
@@ -21,7 +36,7 @@ interface IExchange {
         returns (uint256, uint256);
 
     /**
-     * @notice Exchange Token balance.
+     * @notice Token reserves balance.
      * @return Token balance.
      */
     function getTokenBalance() external view returns (uint256);
