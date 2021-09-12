@@ -4,7 +4,6 @@ import "./interfaces/IFactory.sol";
 import "./Exchange.sol";
 
 contract Factory is IFactory {
-    //
     mapping(address => address) public tokenToExchange;
 
     function createExchange(address tokenAddress)
