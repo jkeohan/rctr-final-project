@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
 interface IExchange {
@@ -55,4 +56,10 @@ interface IExchange {
     function removeLiquidity(uint256 lpAmount)
         external
         returns (uint256, uint256);
+
+    /**
+     * @notice Token reserves balance.
+     * @return Token balance.
+     */
+    function getTokenReserves() external view returns (uint256);
 }

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -45,8 +46,8 @@ contract Exchange is ERC20, IExchange {
 
         uint256 ethAmount = getExchangeAmount(
             tokenAmount,
-            getTokenBalance(),
-            address(this).balance
+            getTokenReserves(),
+            getEthReserves()
         );
 
         require(
@@ -84,8 +85,8 @@ contract Exchange is ERC20, IExchange {
 
         uint256 ethAmount = getExchangeAmount(
             tokenAmount,
-            getTokenBalance(),
-            address(this).balance
+            getTokenReserves(),
+            getEthReserves()
         );
 
         token.transferFrom(msg.sender, address(this), tokenAmount);
@@ -113,18 +114,18 @@ contract Exchange is ERC20, IExchange {
             "addLiquidity: deposit amount too small"
         );
 
-        if (getTokenBalance() == 0) {
+        if (getTokenReserves() == 0) {
             token.transferFrom(msg.sender, address(this), tokensDeposit);
 
-            uint256 liquidity = address(this).balance;
+            uint256 liquidity = getEthReserves();
             _mint(msg.sender, liquidity);
 
             return liquidity;
         } else {
-            uint256 ethReserved = address(this).balance - msg.value;
-            uint256 tokensReserved = getTokenBalance();
-            uint256 tokenRatioAmount = (msg.value * ethReserved) /
-                tokensReserved;
+            uint256 ethReserves = getEthReserves() - msg.value;
+            uint256 tokenReserves = getTokenReserves();
+            uint256 tokenRatioAmount = (msg.value * ethReserves) /
+                tokenReserves;
 
             require(
                 tokenRatioAmount >= tokensDeposit,
@@ -133,7 +134,7 @@ contract Exchange is ERC20, IExchange {
 
             token.transferFrom(msg.sender, address(this), tokenRatioAmount);
 
-            uint256 liquidity = (msg.value * totalSupply()) / ethReserved;
+            uint256 liquidity = (msg.value * totalSupply()) / ethReserves;
             _mint(msg.sender, liquidity);
 
             return liquidity;
@@ -147,9 +148,9 @@ contract Exchange is ERC20, IExchange {
     {
         require(lpAmount > 0, "removeLiquidity: lpAmount too small");
 
-        uint256 ethWithdraw = (address(this).balance * lpAmount) /
+        uint256 ethWithdraw = (getEthReserves() * lpAmount) /
             totalSupply();
-        uint256 tokensWithdraw = (getTokenBalance() * lpAmount) / totalSupply();
+        uint256 tokensWithdraw = (getTokenReserves() * lpAmount) / totalSupply();
 
         _burn(msg.sender, lpAmount);
 
@@ -175,8 +176,8 @@ contract Exchange is ERC20, IExchange {
 
         uint256 tokenAmount = getExchangeAmount(
             msg.value,
-            address(this).balance - msg.value,
-            getTokenBalance()
+            getEthReserves() - msg.value,
+            getTokenReserves()
         );
 
         require(
@@ -187,12 +188,16 @@ contract Exchange is ERC20, IExchange {
         token.transfer(recipient, tokenAmount);
     }
 
-    /**
-     * @notice Token reserves balance.
-     * @return Token balance.
-     */
-    function getTokenBalance() private view returns (uint256) {
+    function getTokenReserves() public view override returns (uint256) {
         return token.balanceOf(address(this));
+    }
+
+    /**
+     * @notice ETH reserves balance.
+     * @return ETH balance.
+     */
+    function getEthReserves() private view returns (uint256) {
+        return address(this).balance;
     }
 
     /**

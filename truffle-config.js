@@ -9,8 +9,7 @@ module.exports = {
       network_id: "*",
       host: "localhost",
       port: 8545,
-      gas: 6721975,
-      gasPrice: 20000000000,
+      // websockets: true, // fixme: for events?
     },
   },
   compilers: {
