@@ -15,7 +15,9 @@
   "scripts": {
     "test": "truffle test",
     "compile": "truffle compile --all",
-    "migrate": "truffle migrate --reset"
+    "migrate": "truffle migrate --reset",
+    "ganache": "ganache-cli -e 1000 -a 3",
+    "ganache-det": "ganache-cli -e 1000 -d -a 3"
   },
   "repository": {
     "type": "git",
