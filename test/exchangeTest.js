@@ -84,4 +84,51 @@ contract("Exchange", accounts => {
         const ethReserves = weiToEth(await getEthReserve(exchange.address));
         assert.equal(ethReserves, 15);
     });
+
+    it("Remove liquidity empty pool", async () => {
+        try {
+            await exchange.removeLiquidity(ethToWei(10), {value: 0});
+        } catch (err) {
+            assert.ok(err.message);
+        }
+    });
+
+    it("Remove liquidity non-empty pool", async () => {
+        assert.ok(await sampleToken1.approve(exchange.address, ethToWei(20)));
+        await exchange.addLiquidity(ethToWei(20), {value: ethToWei(10)});
+
+        await exchange.removeLiquidity(ethToWei(5));
+
+        const lpAmount = weiToEth(await exchange.balanceOf(accounts[0]));
+        assert.equal(weiToEth(await exchange.totalSupply()), lpAmount);
+        assert.equal(lpAmount, 5);
+
+        const tokenReserves = weiToEth(await exchange.getTokenReserves());
+        assert.equal(tokenReserves, 10);
+
+        const ethReserves = weiToEth(await getEthReserve(exchange.address));
+        assert.equal(ethReserves, 5);
+    });
+
+    it("Error remove no liquidity", async () => {
+        assert.ok(await sampleToken1.approve(exchange.address, ethToWei(20)));
+        await exchange.addLiquidity(ethToWei(20), {value: ethToWei(10)});
+    
+        try {
+            await exchange.removeLiquidity(0);
+        } catch (err) {
+            assert.ok(err.message);
+        }
+    });
+
+    it("Error remove more than liquidity", async () => {
+        assert.ok(await sampleToken1.approve(exchange.address, ethToWei(20)));
+        await exchange.addLiquidity(ethToWei(20), {value: ethToWei(10)});
+    
+        try {
+            await exchange.removeLiquidity(ethToWei(15));
+        } catch (err) {
+            assert.ok(err.message);
+        }
+    });
 });

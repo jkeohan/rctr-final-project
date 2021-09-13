@@ -16,6 +16,10 @@ contract Exchange is ERC20, IExchange {
         address indexed sender, 
         uint256 indexed eth, 
         uint256 indexed tok);
+    event LogRemoveLiquidity(
+        address indexed sender, 
+        uint256 indexed eth, 
+        uint256 indexed tok);
     
     // Token for exchange with ETH
     address public token;
@@ -156,6 +160,7 @@ contract Exchange is ERC20, IExchange {
         returns (uint256, uint256)
     {
         require(lpAmount > 0, "removeLiquidity: lpAmount too small");
+        require(totalSupply() >= lpAmount, "removeLiquidity: not enough liquidity");
 
         uint256 ethWithdraw = (getEthReserves() * lpAmount) /
             totalSupply();
@@ -164,7 +169,9 @@ contract Exchange is ERC20, IExchange {
         _burn(msg.sender, lpAmount);
 
         payable(msg.sender).transfer(ethWithdraw);
-        IERC20(token).transferFrom(address(this), msg.sender, tokensWithdraw);
+        IERC20(token).transfer(msg.sender, tokensWithdraw);
+
+        emit LogRemoveLiquidity(msg.sender, ethWithdraw, tokensWithdraw);
 
         return (ethWithdraw, tokensWithdraw);
     }
