@@ -11,8 +11,14 @@ import "./interfaces/IFactory.sol";
 contract Exchange is ERC20, IExchange {
     // using SafeMath for uint256; // TODO: use this for math?
 
+    // Events
+    event LogAddLiquidity(
+        address indexed sender, 
+        uint256 indexed eth, 
+        uint256 indexed tok);
+    
     // Token for exchange with ETH
-    IERC20 public token;
+    address public token;
     // Exchange manager for Token-to-Token exchanges.
     address public factory;
 
@@ -22,7 +28,7 @@ contract Exchange is ERC20, IExchange {
             "constructor: invalid token address"
         );
 
-        token = IERC20(token_address);
+        token = token_address;
         factory = msg.sender;
     }
 
@@ -56,7 +62,7 @@ contract Exchange is ERC20, IExchange {
         );
 
         payable(msg.sender).transfer(ethAmount);
-        token.transferFrom(msg.sender, address(this), tokenAmount);
+        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
     }
 
     function tokenToTokenExchange(
@@ -89,7 +95,7 @@ contract Exchange is ERC20, IExchange {
             getEthReserves()
         );
 
-        token.transferFrom(msg.sender, address(this), tokenAmount);
+        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
         IExchange(otherTokenExchangeAddress).ethToTokenTransfer{
             value: ethAmount
         }(desiredOtherTokenAmount, msg.sender);
@@ -103,39 +109,42 @@ contract Exchange is ERC20, IExchange {
         ethToTokenTransferHelper(desiredTokenAmount, recipient);
     }
 
-    function addLiquidity(uint256 tokensDeposit)
+    function addLiquidity(uint256 tokenDeposit)
         public
         payable
         override
         returns (uint256)
     {
         require(
-            tokensDeposit > 0 && msg.value > 0,
+            tokenDeposit > 0 && msg.value > 0,
             "addLiquidity: deposit amount too small"
         );
 
         if (getTokenReserves() == 0) {
-            token.transferFrom(msg.sender, address(this), tokensDeposit);
+            IERC20(token).transferFrom(msg.sender, address(this), tokenDeposit);
 
             uint256 liquidity = getEthReserves();
             _mint(msg.sender, liquidity);
+
+            emit LogAddLiquidity(msg.sender, msg.value, tokenDeposit);
 
             return liquidity;
         } else {
             uint256 ethReserves = getEthReserves() - msg.value;
             uint256 tokenReserves = getTokenReserves();
-            uint256 tokenRatioAmount = (msg.value * ethReserves) /
-                tokenReserves;
+            uint256 tokenRatioAmount = (msg.value * tokenReserves) / ethReserves;
 
             require(
-                tokenRatioAmount >= tokensDeposit,
+                tokenDeposit >= tokenRatioAmount,
                 "addLiquidity: not enough liquidity"
             );
 
-            token.transferFrom(msg.sender, address(this), tokenRatioAmount);
+            IERC20(token).transferFrom(msg.sender, address(this), tokenDeposit);
 
             uint256 liquidity = (msg.value * totalSupply()) / ethReserves;
             _mint(msg.sender, liquidity);
+
+            emit LogAddLiquidity(msg.sender, msg.value, tokenDeposit);
 
             return liquidity;
         }
@@ -155,7 +164,7 @@ contract Exchange is ERC20, IExchange {
         _burn(msg.sender, lpAmount);
 
         payable(msg.sender).transfer(ethWithdraw);
-        token.transferFrom(address(this), msg.sender, tokensWithdraw);
+        IERC20(token).transferFrom(address(this), msg.sender, tokensWithdraw);
 
         return (ethWithdraw, tokensWithdraw);
     }
@@ -185,11 +194,11 @@ contract Exchange is ERC20, IExchange {
             "ethToTokenExchange: not enough tokens"
         );
 
-        token.transfer(recipient, tokenAmount);
+        IERC20(token).transfer(recipient, tokenAmount);
     }
 
     function getTokenReserves() public view override returns (uint256) {
-        return token.balanceOf(address(this));
+        return IERC20(token).balanceOf(address(this));
     }
 
     /**

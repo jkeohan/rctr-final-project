@@ -40,10 +40,10 @@ interface IExchange {
 
     /**
      * @notice Deposit ETH & Tokens to mint DREAM (LP-tokens).
-     * @param tokensDeposit Amount of tokens to deposit.
+     * @param tokenDeposit Maximum amount of tokens to deposit.
      * @return Amount of DREAM minted.
      */
-    function addLiquidity(uint256 tokensDeposit)
+    function addLiquidity(uint256 tokenDeposit)
         external
         payable
         returns (uint256);
