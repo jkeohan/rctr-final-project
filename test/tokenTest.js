@@ -37,8 +37,8 @@ contract("SampleToken1", accounts => {
         try {
             await sampleToken1.transfer(accounts[1], 101);
             assert.fail();
-        } catch (error) {
-            // passed
+        } catch (err) {
+            assert.ok(err.message)
         }
     });
 });

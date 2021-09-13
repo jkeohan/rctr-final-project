@@ -5,6 +5,8 @@ import "./interfaces/IFactory.sol";
 import "./Exchange.sol";
 
 contract Factory is IFactory {
+    event LogCreateExchange(address indexed token, address indexed exchange);
+
     mapping(address => address) public tokenToExchange;
 
     function createExchange(address tokenAddress)
@@ -23,6 +25,8 @@ contract Factory is IFactory {
 
         Exchange exchange = new Exchange(tokenAddress);
         tokenToExchange[tokenAddress] = address(exchange);
+
+        emit LogCreateExchange(tokenAddress, address(exchange));
 
         return address(exchange);
     }
