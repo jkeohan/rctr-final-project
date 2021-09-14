@@ -29,7 +29,7 @@ contract("Exchange", (accounts) => {
         sampleToken1 = await SampleToken1.new(
             "SampleToken1",
             "TOK1",
-            ethToWei(100)
+            ethToWei(1000)
         );
         await factory.createExchange(sampleToken1.address);
         exchange = await Exchange.at(
@@ -179,6 +179,75 @@ contract("Exchange", (accounts) => {
             } catch (err) {
                 assert.ok(err.message);
             }
+        });
+    });
+
+    describe("ETH to Token Swap", async () => {
+        describe("Empty liquidity pool", async () => {
+            it("Error try to swap", async () => {
+                try {
+                    await exchange.ethToTokenExchange(ethToWei(500), {
+                        value: ethToWei(10),
+                    });
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+        });
+
+        describe("Non-empty liquidity pool", async () => {
+            beforeEach("Setup", async () => {
+                assert.ok(
+                    await sampleToken1.approve(exchange.address, ethToWei(500))
+                );
+                await exchange.addLiquidity(ethToWei(500), {
+                    value: ethToWei(10),
+                });
+            });
+
+            it("Error invalid token amount", async () => {
+                try {
+                    await exchange.ethToTokenExchange(0);
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+
+            it("Error not enough ETH for desired Token amount", async () => {
+                try {
+                    await exchange.ethToTokenExchange(ethToWei(500), {
+                        value: ethToWei(1),
+                    });
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+
+            it("Swap correct Token amount", async () => {
+                const userTokBefore = await getTokBalance(
+                    sampleToken1,
+                    accounts[0]
+                );
+
+                await exchange.ethToTokenExchange(ethToWei(45), {
+                    value: ethToWei(1),
+                });
+
+                const userTokAfter = await getTokBalance(
+                    sampleToken1,
+                    accounts[0]
+                );
+
+                assert.equal(
+                    await getTokBalance(sampleToken1, exchange.address),
+                    ethToWei(500) - (userTokAfter - userTokBefore)
+                );
+
+                assert.equal(
+                    await getEthBalance(exchange.address),
+                    ethToWei(11)
+                );
+            });
         });
     });
 });
