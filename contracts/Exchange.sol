@@ -13,14 +13,26 @@ contract Exchange is ERC20, IExchange {
 
     // Events
     event LogAddLiquidity(
-        address indexed sender, 
-        uint256 indexed eth, 
-        uint256 indexed tok);
+        address indexed sender,
+        uint256 indexed eth,
+        uint256 indexed tok
+    );
     event LogRemoveLiquidity(
-        address indexed sender, 
-        uint256 indexed eth, 
-        uint256 indexed tok);
-    
+        address indexed sender,
+        uint256 indexed eth,
+        uint256 indexed tok
+    );
+    event TokenPurchase(
+        address indexed buyer,
+        uint256 indexed ethSold,
+        uint256 indexed tokensBought
+    );
+    event EthPurchase(
+        address indexed buyer,
+        uint256 indexed tokensSold,
+        uint256 indexed ethBought
+    ); // FIXME: unused
+
     // Token for exchange with ETH
     address public token;
     // Exchange manager for Token-to-Token exchanges.
@@ -41,7 +53,7 @@ contract Exchange is ERC20, IExchange {
         payable
         override
     {
-        ethToTokenTransferHelper(desiredTokenAmount, msg.sender);
+        ethToTokenTransfer(desiredTokenAmount, msg.sender);
     }
 
     function tokenToEthExchange(uint256 tokenAmount, uint256 desiredEthAmount)
@@ -49,24 +61,7 @@ contract Exchange is ERC20, IExchange {
         payable
         override
     {
-        require(
-            tokenAmount > 0 && desiredEthAmount > 0,
-            "tokenToEthExchange: exchange amount too small"
-        );
-
-        uint256 ethAmount = getExchangeAmount(
-            tokenAmount,
-            getTokenReserves(),
-            getEthReserves()
-        );
-
-        require(
-            ethAmount >= desiredEthAmount,
-            "tokenToEthExchange: not enough eth"
-        );
-
-        payable(msg.sender).transfer(ethAmount);
-        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
+        tokenToEthTransfer(tokenAmount, desiredEthAmount, msg.sender);
     }
 
     function tokenToTokenExchange(
@@ -106,11 +101,96 @@ contract Exchange is ERC20, IExchange {
     }
 
     function ethToTokenTransfer(uint256 desiredTokenAmount, address recipient)
-        external
+        public
         payable
         override
     {
-        ethToTokenTransferHelper(desiredTokenAmount, recipient);
+        require(
+            desiredTokenAmount > 0,
+            "ethToTokenTransfer: desiredTokenAmount too small"
+        );
+
+        uint256 tokenAmount = getExchangeAmount(
+            msg.value,
+            getEthReserves() - msg.value,
+            getTokenReserves()
+        );
+
+        require(
+            tokenAmount >= desiredTokenAmount,
+            "ethToTokenExchange: not enough tokens"
+        );
+
+        IERC20(token).transfer(recipient, tokenAmount);
+
+        emit TokenPurchase(recipient, tokenAmount, msg.value);
+    }
+
+    function tokenToEthTransfer(
+        uint256 tokenAmount,
+        uint256 desiredEthAmount,
+        address recipient
+    ) public payable override {
+        require(
+            tokenAmount > 0 && desiredEthAmount > 0,
+            "tokenToEthExchange: exchange amount too small"
+        );
+
+        uint256 ethAmount = getExchangeAmount(
+            tokenAmount,
+            getTokenReserves(),
+            getEthReserves()
+        );
+
+        require(
+            ethAmount >= desiredEthAmount,
+            "tokenToEthExchange: not enough eth"
+        );
+
+        payable(recipient).transfer(ethAmount);
+        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
+
+        emit EthPurchase(recipient, tokenAmount, ethAmount);
+    }
+
+    function tokenToTokenTransfer(
+        uint256 tokenAmount,
+        uint256 desiredOtherTokenAmount,
+        address otherTokenAddress,
+        address recipient
+    ) public payable override {
+        require(
+            tokenAmount > 0 && desiredOtherTokenAmount > 0,
+            "tokenToTokenExchange: token amounts too small"
+        );
+        require(
+            otherTokenAddress != address(0),
+            "tokenToTokenExchange: invalid token2Address"
+        );
+
+        address otherTokenExchangeAddress = IFactory(factory).getExchange(
+            otherTokenAddress
+        );
+
+        require(
+            otherTokenExchangeAddress != address(this) &&
+                otherTokenExchangeAddress != address(0),
+            "tokenToTokenExchange: token2Address is not an exchange"
+        );
+
+        uint256 ethAmount = getExchangeAmount(
+            tokenAmount,
+            getTokenReserves(),
+            getEthReserves()
+        );
+
+        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
+
+        emit EthPurchase(msg.sender, tokenAmount, ethAmount);
+
+        IExchange(otherTokenExchangeAddress).ethToTokenTransfer{
+            value: ethAmount
+        }(desiredOtherTokenAmount, recipient);
     }
 
     function addLiquidity(uint256 tokenDeposit)
@@ -136,7 +216,8 @@ contract Exchange is ERC20, IExchange {
         } else {
             uint256 ethReserves = getEthReserves() - msg.value;
             uint256 tokenReserves = getTokenReserves();
-            uint256 tokenRatioAmount = (msg.value * tokenReserves) / ethReserves;
+            uint256 tokenRatioAmount = (msg.value * tokenReserves) /
+                ethReserves;
 
             require(
                 tokenDeposit >= tokenRatioAmount,
@@ -160,11 +241,14 @@ contract Exchange is ERC20, IExchange {
         returns (uint256, uint256)
     {
         require(lpAmount > 0, "removeLiquidity: lpAmount too small");
-        require(totalSupply() >= lpAmount, "removeLiquidity: not enough liquidity");
+        require(
+            totalSupply() >= lpAmount,
+            "removeLiquidity: not enough liquidity"
+        );
 
-        uint256 ethWithdraw = (getEthReserves() * lpAmount) /
+        uint256 ethWithdraw = (getEthReserves() * lpAmount) / totalSupply();
+        uint256 tokensWithdraw = (getTokenReserves() * lpAmount) /
             totalSupply();
-        uint256 tokensWithdraw = (getTokenReserves() * lpAmount) / totalSupply();
 
         _burn(msg.sender, lpAmount);
 
@@ -174,34 +258,6 @@ contract Exchange is ERC20, IExchange {
         emit LogRemoveLiquidity(msg.sender, ethWithdraw, tokensWithdraw);
 
         return (ethWithdraw, tokensWithdraw);
-    }
-
-    /**
-     * @notice Echanges ETH for Tokens for recipient.
-     * @param desiredTokenAmount Amount of tokens to exchange for.
-     * @param recipient Address of recipient.
-     */
-    function ethToTokenTransferHelper(
-        uint256 desiredTokenAmount,
-        address recipient
-    ) private {
-        require(
-            desiredTokenAmount > 0,
-            "ethToTokenTransfer: desiredTokenAmount too small"
-        );
-
-        uint256 tokenAmount = getExchangeAmount(
-            msg.value,
-            getEthReserves() - msg.value,
-            getTokenReserves()
-        );
-
-        require(
-            tokenAmount >= desiredTokenAmount,
-            "ethToTokenExchange: not enough tokens"
-        );
-
-        IERC20(token).transfer(recipient, tokenAmount);
     }
 
     function getTokenReserves() public view override returns (uint256) {
@@ -235,7 +291,7 @@ contract Exchange is ERC20, IExchange {
 
         uint256 sellAmountWithFee = sellAmount * 997;
         uint256 numerator = (sellAmountWithFee * buyReserve);
-        uint256 denominator = buyReserve * 1000 + sellAmountWithFee;
+        uint256 denominator = sellReserve * 1000 + sellAmountWithFee;
 
         return numerator / denominator;
     }
