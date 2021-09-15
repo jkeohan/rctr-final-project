@@ -31,7 +31,7 @@ contract Exchange is ERC20, IExchange {
         address indexed buyer,
         uint256 indexed tokensSold,
         uint256 indexed ethBought
-    ); // FIXME: unused
+    );
 
     // Token for exchange with ETH
     address public token;
@@ -69,35 +69,12 @@ contract Exchange is ERC20, IExchange {
         uint256 desiredOtherTokenAmount,
         address otherTokenAddress
     ) external payable override {
-        require(
-            tokenAmount > 0 && desiredOtherTokenAmount > 0,
-            "tokenToTokenExchange: token amounts too small"
-        );
-        require(
-            otherTokenAddress != address(0),
-            "tokenToTokenExchange: invalid token2Address"
-        );
-
-        address otherTokenExchangeAddress = IFactory(factory).getExchange(
-            otherTokenAddress
-        );
-
-        require(
-            otherTokenExchangeAddress != address(this) &&
-                otherTokenExchangeAddress != address(0),
-            "tokenToTokenExchange: token2Address is not an exchange"
-        );
-
-        uint256 ethAmount = getExchangeAmount(
+        tokenToTokenTransfer(
             tokenAmount,
-            getTokenReserves(),
-            getEthReserves()
+            desiredOtherTokenAmount,
+            otherTokenAddress,
+            msg.sender
         );
-
-        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
-        IExchange(otherTokenExchangeAddress).ethToTokenTransfer{
-            value: ethAmount
-        }(desiredOtherTokenAmount, msg.sender);
     }
 
     function ethToTokenTransfer(uint256 desiredTokenAmount, address recipient)
@@ -164,8 +141,8 @@ contract Exchange is ERC20, IExchange {
             "tokenToTokenExchange: token amounts too small"
         );
         require(
-            otherTokenAddress != address(0),
-            "tokenToTokenExchange: invalid token2Address"
+            otherTokenAddress != address(0) && otherTokenAddress != token,
+            "tokenToTokenExchange: invalid otherTokenAddress"
         );
 
         address otherTokenExchangeAddress = IFactory(factory).getExchange(
@@ -173,9 +150,8 @@ contract Exchange is ERC20, IExchange {
         );
 
         require(
-            otherTokenExchangeAddress != address(this) &&
-                otherTokenExchangeAddress != address(0),
-            "tokenToTokenExchange: token2Address is not an exchange"
+            otherTokenExchangeAddress != address(0),
+            "tokenToTokenExchange: otherTokenAddress does not have not an exchange"
         );
 
         uint256 ethAmount = getExchangeAmount(
@@ -184,13 +160,18 @@ contract Exchange is ERC20, IExchange {
             getEthReserves()
         );
 
-        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
+        require(
+            ethAmount > 0,
+            "tokenToTokenExchange: intermediary eth amount too small"
+        );
 
-        emit EthPurchase(msg.sender, tokenAmount, ethAmount);
+        IERC20(token).transferFrom(msg.sender, address(this), tokenAmount);
 
         IExchange(otherTokenExchangeAddress).ethToTokenTransfer{
             value: ethAmount
         }(desiredOtherTokenAmount, recipient);
+
+        emit EthPurchase(msg.sender, tokenAmount, ethAmount);
     }
 
     function addLiquidity(uint256 tokenDeposit)

@@ -18,6 +18,7 @@ const getGasCost = async (tx) =>
 const Exchange = artifacts.require("./Exchange.sol");
 const Factory = artifacts.require("./Factory.sol");
 const SampleToken1 = artifacts.require("./SampleToken1.sol");
+const SampleToken2 = artifacts.require("./SampleToken2.sol");
 
 contract("Exchange", (accounts) => {
     let factory;
@@ -326,6 +327,141 @@ contract("Exchange", (accounts) => {
                     await getEthBalance(exchange.address),
                     ethToWei(9)
                 );
+            });
+        });
+    });
+
+    describe("Token to Token Swap", async () => {
+        let exchange2;
+        let sampleToken2;
+
+        beforeEach("Setup", async () => {
+            sampleToken2 = await SampleToken2.new(
+                "SampleToken2",
+                "TOK2",
+                ethToWei(1000)
+            );
+        });
+
+        describe("Parameter setup checks", async () => {
+            it("Error invalid token amounts", async () => {
+                try {
+                    await exchange.tokenToTokenExchange(
+                        0,
+                        0,
+                        sampleToken2.address
+                    );
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+
+            it("Error invalid Token2 address", async () => {
+                try {
+                    await exchange.tokenToTokenExchange(1, 1, 0x0);
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+
+                try {
+                    await exchange.tokenToTokenExchange(
+                        1,
+                        1,
+                        sampleToken1.address
+                    );
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+
+            it("Error non-existant Token2 exchange address", async () => {
+                try {
+                    await exchange.tokenToTokenExchange(
+                        1,
+                        1,
+                        sampleToken2.address
+                    );
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+        });
+
+        describe("Swap checks", async () => {
+            beforeEach("Setup", async () => {
+                await factory.createExchange(sampleToken2.address);
+                exchange2 = await Exchange.at(
+                    await factory.getExchange(sampleToken2.address)
+                );
+            });
+
+            describe("Empty liquidity pool", async () => {
+                it("Error try to swap", async () => {
+                    try {
+                        await exchange.tokenToTokenExchange(
+                            ethToWei(10),
+                            ethToWei(10),
+                            sampleToken2.address
+                        );
+                    } catch (err) {
+                        assert.ok(err.message);
+                    }
+                });
+            });
+
+            describe("Non-empty liquidity pool", async () => {
+                beforeEach("Setup", async () => {
+                    await sampleToken1.approve(exchange.address, ethToWei(500));
+                    await exchange.addLiquidity(ethToWei(500), {
+                        value: ethToWei(10),
+                    });
+
+                    await sampleToken2.approve(
+                        exchange2.address,
+                        ethToWei(1000)
+                    );
+                    await exchange2.addLiquidity(ethToWei(1000), {
+                        value: ethToWei(10),
+                    });
+                });
+
+                it("Error not enough Token1 for desired Token2 amount", async () => {
+                    try {
+                        await sampleToken1.approve(
+                            exchange.address,
+                            ethToWei(1)
+                        );
+                        await exchange.tokenToTokenExchange(
+                            ethToWei(1),
+                            ethToWei(100),
+                            sampleToken2.address
+                        );
+                    } catch (err) {
+                        assert.ok(err.message);
+                    }
+                });
+
+                it("Swap correct Token2 amount", async () => {
+                    await sampleToken1.approve(
+                        exchange.address,
+                        ethToWei("55.722723726735762845")
+                    );
+                    await exchange.tokenToTokenExchange(
+                        ethToWei("55.722723726735762845"),
+                        ethToWei(1),
+                        sampleToken2.address
+                    );
+
+                    const userTok2After = await getTokBalance(
+                        sampleToken2,
+                        accounts[0]
+                    );
+
+                    assert.equal(
+                        userTok2After,
+                        ethToWei("90.661089388014913158")
+                    );
+                });
             });
         });
     });
