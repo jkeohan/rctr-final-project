@@ -85,7 +85,9 @@ contract("Exchange", (accounts) => {
             assert.equal(weiToEth(await exchange.totalSupply()), lpAmount);
             assert.equal(lpAmount, 10);
 
-            const tokenReserves = weiToEth(await exchange.getTokenReserves());
+            const tokenReserves = weiToEth(
+                await getTokBalance(sampleToken1, exchange.address)
+            );
             assert.equal(tokenReserves, 20);
 
             const ethReserves = weiToEth(await getEthBalance(exchange.address));
@@ -105,7 +107,9 @@ contract("Exchange", (accounts) => {
             assert.equal(weiToEth(await exchange.totalSupply()), lpAmount);
             assert.equal(lpAmount, 15);
 
-            const tokenReserves = weiToEth(await exchange.getTokenReserves());
+            const tokenReserves = weiToEth(
+                await getTokBalance(sampleToken1, exchange.address)
+            );
             assert.equal(tokenReserves, 30);
 
             const ethReserves = weiToEth(await getEthBalance(exchange.address));
@@ -119,7 +123,9 @@ contract("Exchange", (accounts) => {
             assert.ok(
                 await sampleToken1.approve(exchange.address, ethToWei(20))
             );
-            await exchange.addLiquidity(ethToWei(20), { value: ethToWei(10) });
+            await exchange.addLiquidity(ethToWei(20), {
+                value: ethToWei(10),
+            });
         });
 
         it("Remove liquidity", async () => {
@@ -131,7 +137,9 @@ contract("Exchange", (accounts) => {
             assert.equal(weiToEth(await exchange.totalSupply()), lpAmount);
             assert.equal(lpAmount, 5);
 
-            const tokenReserves = weiToEth(await exchange.getTokenReserves());
+            const tokenReserves = weiToEth(
+                await getTokBalance(sampleToken1, exchange.address)
+            );
             assert.equal(tokenReserves, 10);
 
             const ethReserves = weiToEth(await getEthBalance(exchange.address));
@@ -139,19 +147,11 @@ contract("Exchange", (accounts) => {
         });
 
         it("Remove all liquidity non-empty pool", async () => {
-            const userEthBefore = await getEthBalance(accounts[0]);
-            const userTokBefore = await getTokBalance(
-                sampleToken1,
-                accounts[0]
-            );
+            const ret = await exchange.removeLiquidity.call(ethToWei(10));
+            assert.equal(weiToEth(ret["0"]), 10);
+            assert.equal(weiToEth(ret["1"]), 20);
 
-            const tx = await exchange.removeLiquidity(ethToWei(10));
-            const gasCost = await getGasCost(tx);
-
-            const userEthAfter = await getEthBalance(accounts[0]);
-            const userTokAfter = await getTokBalance(sampleToken1, accounts[0]);
-            assert.equal(userEthBefore, userEthAfter - ethToWei(10) + gasCost);
-            assert.equal(userTokBefore, userTokAfter - ethToWei(20));
+            await exchange.removeLiquidity(ethToWei(10));
 
             const lpAmount = weiToEth(
                 await getTokBalance(exchange, accounts[0])
@@ -159,7 +159,9 @@ contract("Exchange", (accounts) => {
             assert.equal(weiToEth(await exchange.totalSupply()), lpAmount);
             assert.equal(lpAmount, 0);
 
-            const tokenReserves = weiToEth(await exchange.getTokenReserves());
+            const tokenReserves = weiToEth(
+                await getTokBalance(sampleToken1, exchange.address)
+            );
             assert.equal(tokenReserves, 0);
 
             const ethReserves = weiToEth(await getEthBalance(exchange.address));
@@ -463,6 +465,33 @@ contract("Exchange", (accounts) => {
                     );
                 });
             });
+        });
+    });
+
+    describe("Exchange rates", async () => {
+        beforeEach("Setup", async () => {
+            assert.ok(
+                await sampleToken1.approve(exchange.address, ethToWei(500))
+            );
+            await exchange.addLiquidity(ethToWei(500), {
+                value: ethToWei(10),
+            });
+        });
+
+        it("ETH to Token", async () => {
+            const ethPrice = await exchange.getTokenToEthExchangeRate(
+                ethToWei(100)
+            );
+
+            assert.equal(ethPrice, ethToWei("1.662497915624478906"));
+        });
+
+        it("Token to ETH", async () => {
+            const tokenPrice = await exchange.getEthToTokenExchangeRate(
+                ethToWei(1)
+            );
+
+            assert.equal(tokenPrice, ethToWei("45.330544694007456579"));
         });
     });
 });

@@ -241,7 +241,45 @@ contract Exchange is ERC20, IExchange {
         return (ethWithdraw, tokensWithdraw);
     }
 
-    function getTokenReserves() public view override returns (uint256) {
+    function getTokenToEthExchangeRate(uint256 tokenAmount)
+        public
+        view
+        override
+        returns (uint256)
+    {
+        require(
+            tokenAmount > 0,
+            "getTokenToEthExchangeRate: tokenAmount too small"
+        );
+
+        return
+            getExchangeAmount(
+                tokenAmount,
+                getTokenReserves(),
+                getEthReserves()
+            );
+    }
+
+    function getEthToTokenExchangeRate(uint256 ethAmount)
+        public
+        view
+        override
+        returns (uint256)
+    {
+        require(
+            ethAmount > 0,
+            "getEthToTokenExchangeRate: ethAmount too small"
+        );
+
+        return
+            getExchangeAmount(ethAmount, getEthReserves(), getTokenReserves());
+    }
+
+    /**
+     * @notice Token reserves balance.
+     * @return Token balance.
+     */
+    function getTokenReserves() private view returns (uint256) {
         return IERC20(token).balanceOf(address(this));
     }
 

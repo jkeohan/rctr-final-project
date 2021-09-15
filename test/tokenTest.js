@@ -1,13 +1,11 @@
-var assert = require('assert');
+var assert = require("assert");
 
 const SampleToken1 = artifacts.require("./SampleToken1.sol");
 
-contract("SampleToken1", accounts => {
-    console.log("accounts: ", accounts);
-
+contract("SampleToken1", (accounts) => {
     let sampleToken1;
-    
-    beforeEach('Setup contract for each test',  async () => {
+
+    beforeEach("Setup contract for each test", async () => {
         sampleToken1 = await SampleToken1.new("SampleToken1", "TOK1", 100);
     });
 
@@ -38,7 +36,7 @@ contract("SampleToken1", accounts => {
             await sampleToken1.transfer(accounts[1], 101);
             assert.fail();
         } catch (err) {
-            assert.ok(err.message)
+            assert.ok(err.message);
         }
     });
 });

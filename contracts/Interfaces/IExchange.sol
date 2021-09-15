@@ -83,13 +83,23 @@ interface IExchange {
         external
         returns (uint256, uint256);
 
-    // TODO: make exchange rate public?
-
-    // TODO: make private to contract?
+    /**
+     * @notice ETH received for provided Tokens.
+     * @param tokenAmount Amount of Tokens provided.
+     * @return ETH received.
+     */
+    function getTokenToEthExchangeRate(uint256 tokenAmount)
+        external
+        view
+        returns (uint256);
 
     /**
-     * @notice Token reserves balance.
-     * @return Token balance.
+     * @notice Token received for provided ETH.
+     * @param ethAmount Amount of ETH provided.
+     * @return Tokens received.
      */
-    function getTokenReserves() external view returns (uint256);
+    function getEthToTokenExchangeRate(uint256 ethAmount)
+        external
+        view
+        returns (uint256);
 }
