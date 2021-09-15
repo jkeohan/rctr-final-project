@@ -205,7 +205,7 @@ contract("Exchange", (accounts) => {
                 });
             });
 
-            it("Error invalid token amount", async () => {
+            it("Error invalid Token amount", async () => {
                 try {
                     await exchange.ethToTokenExchange(0);
                 } catch (err) {
@@ -246,6 +246,85 @@ contract("Exchange", (accounts) => {
                 assert.equal(
                     await getEthBalance(exchange.address),
                     ethToWei(11)
+                );
+            });
+        });
+    });
+
+    describe("Token to ETH Swap", async () => {
+        describe("Empty liquidity pool", async () => {
+            it("Error try to swap", async () => {
+                try {
+                    await exchange.tokenToEthExchange(
+                        ethToWei(10),
+                        ethToWei(10)
+                    );
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+        });
+
+        describe("Non-empty liquidity pool", async () => {
+            beforeEach("Setup", async () => {
+                assert.ok(
+                    await sampleToken1.approve(exchange.address, ethToWei(500))
+                );
+                await exchange.addLiquidity(ethToWei(500), {
+                    value: ethToWei(10),
+                });
+            });
+
+            it("Error invalid Token/ETH amount", async () => {
+                try {
+                    await exchange.tokenToEthExchange(0, 0);
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+
+            it("Error not enough Token for desired ETH amount", async () => {
+                try {
+                    await sampleToken1.approve(exchange.address, ethToWei(1));
+                    await exchange.tokenToEthExchange(ethToWei(1), ethToWei(1));
+                } catch (err) {
+                    assert.ok(err.message);
+                }
+            });
+
+            it("Swap correct ETH amount", async () => {
+                const userTokBefore = await getTokBalance(
+                    sampleToken1,
+                    accounts[0]
+                );
+
+                await sampleToken1.approve(
+                    exchange.address,
+                    ethToWei("55.722723726735762845")
+                );
+                await exchange.tokenToEthExchange(
+                    ethToWei("55.722723726735762845"),
+                    ethToWei(1)
+                );
+
+                const userTokAfter = await getTokBalance(
+                    sampleToken1,
+                    accounts[0]
+                );
+
+                assert.equal(
+                    await getTokBalance(sampleToken1, exchange.address),
+                    ethToWei("555.722723726735762845")
+                );
+
+                // assert.equal(
+                //     userTokBefore - userTokAfter, // fixme: precision issue need to fix
+                //     ethToWei("55.722723726735762845")
+                // );
+
+                assert.equal(
+                    await getEthBalance(exchange.address),
+                    ethToWei(9)
                 );
             });
         });

@@ -38,8 +38,6 @@ interface IExchange {
         external
         payable;
 
-    // TODO:
-
     /**
      * @notice Exchange Tokens for ETH (transferred to recipient).
      * @param tokenAmount Amount of Tokens provided.
