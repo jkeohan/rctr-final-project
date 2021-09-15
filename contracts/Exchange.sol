@@ -3,13 +3,13 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-// import "@openzeppelin/contracts/utils/math/SafeMath.sol"; // TODO: remove?
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./interfaces/IExchange.sol";
 import "./interfaces/IFactory.sol";
 
 contract Exchange is ERC20, IExchange {
-    // using SafeMath for uint256; // TODO: use this for math?
+    using SafeMath for uint256;
 
     // Events
     event LogAddLiquidity(
@@ -89,7 +89,7 @@ contract Exchange is ERC20, IExchange {
 
         uint256 tokenAmount = getExchangeAmount(
             msg.value,
-            getEthReserves() - msg.value,
+            getEthReserves().sub(msg.value),
             getTokenReserves()
         );
 
@@ -195,10 +195,11 @@ contract Exchange is ERC20, IExchange {
 
             return liquidity;
         } else {
-            uint256 ethReserves = getEthReserves() - msg.value;
+            uint256 ethReserves = getEthReserves().sub(msg.value);
             uint256 tokenReserves = getTokenReserves();
-            uint256 tokenRatioAmount = (msg.value * tokenReserves) /
-                ethReserves;
+            uint256 tokenRatioAmount = msg.value.mul(tokenReserves).div(
+                ethReserves
+            );
 
             require(
                 tokenDeposit >= tokenRatioAmount,
@@ -207,7 +208,7 @@ contract Exchange is ERC20, IExchange {
 
             IERC20(token).transferFrom(msg.sender, address(this), tokenDeposit);
 
-            uint256 liquidity = (msg.value * totalSupply()) / ethReserves;
+            uint256 liquidity = msg.value.mul(totalSupply()).div(ethReserves);
             _mint(msg.sender, liquidity);
 
             emit LogAddLiquidity(msg.sender, msg.value, tokenDeposit);
@@ -227,9 +228,10 @@ contract Exchange is ERC20, IExchange {
             "removeLiquidity: not enough liquidity"
         );
 
-        uint256 ethWithdraw = (getEthReserves() * lpAmount) / totalSupply();
-        uint256 tokensWithdraw = (getTokenReserves() * lpAmount) /
-            totalSupply();
+        uint256 ethWithdraw = getEthReserves().mul(lpAmount).div(totalSupply());
+        uint256 tokensWithdraw = getTokenReserves().mul(lpAmount).div(
+            totalSupply()
+        );
 
         _burn(msg.sender, lpAmount);
 
@@ -308,10 +310,10 @@ contract Exchange is ERC20, IExchange {
             "getExchangePrice: invalid reserve amounts"
         );
 
-        uint256 sellAmountWithFee = sellAmount * 997;
-        uint256 numerator = (sellAmountWithFee * buyReserve);
-        uint256 denominator = sellReserve * 1000 + sellAmountWithFee;
+        uint256 sellAmountWithFee = sellAmount.mul(997);
+        uint256 numerator = sellAmountWithFee.mul(buyReserve);
+        uint256 denominator = sellReserve.mul(1000).add(sellAmountWithFee);
 
-        return numerator / denominator;
+        return numerator.div(denominator);
     }
 }
