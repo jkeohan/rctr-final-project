@@ -32,7 +32,7 @@ Show us what you've got!
 - [Netflix](https://pmanuja.github.io/Movies_App/)
 - [Bible Trip](https://raboriel.github.io/BibleTrip/)
 - [Fav Space](https://dummy-website-opal.vercel.app/) - [Project Github Repo](https://github.com/davidvdev/dummy-website)
-- [Complete List of Previous Student Projects](https://docs.google.com/spreadsheets/d/1r5sAr-cW6WjmpJoSx3KIqftFGzkQ3cdSEY-97PWqrLU/edit#gid=1298144994)
+- [Complete List of Previous Student Projects](https://docs.google.com/spreadsheets/d/1r5sAr-cW6WjmpJoSx3KIqftFGzkQ3cdSEY-97PWqrLU/edit?usp=sharing)
 
 <!-- ### 📋 Learning the Contentful API
 
