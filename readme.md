@@ -32,10 +32,10 @@ Show us what you've got!
 - [Netflix](https://pmanuja.github.io/Movies_App/)
 - [Bible Trip](https://raboriel.github.io/BibleTrip/)
 
-### 📋 Learning the Contentful API
+<!-- ### 📋 Learning the Contentful API
 
  - [Intro to Using Contentful](https://www.youtube.com/watch?v=IfKh_jSj3DU)
- - [Intro to Agility CMS](https://tuts.alexmercedcoder.com/2020/AgilityCMSBlog/)
+ - [Intro to Agility CMS](https://tuts.alexmercedcoder.com/2020/AgilityCMSBlog/) -->
 
 #### Your code must:
 
