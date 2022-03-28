@@ -9,24 +9,6 @@ You must submit your full project proposal to your squad leader by 10AM EST Mond
 
 Show us what you've got!
 
-## Prerequistes
-
-In order to help set you up for success you are required to do the following before you attempt to plan out your project:
-
-#### Reading
-
- The [previous cohorts project retrospective](https://git.generalassemb.ly/SEIR-329/project-2-react/blob/master/previouss-class-retros/previous-class-project-retrospective.md)
-
-There are alot of helpful hints and hindsight that were captured after the completion of project 1 which are sure to help provide some guidance on what to and not to do during this project. 
-
-#### Watch
-
- [Mastering Markdown](https://masteringmarkdown.com/) - 34min
-
- You will need to write and update markdown for this project as will be the case for all future projects so it's your responsibility to become familiar with the syntax.  
-
----
-
 ## Requirements
 
 #### Your website must:
