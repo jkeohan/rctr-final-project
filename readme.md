@@ -90,7 +90,7 @@ Read the following articles posted by previous students into how they planned an
 * **Don't hesitate to write messy code to solve short-term problems**&mdash;***Refactor later***
 * **Read the docs for whatever technologies you use**. The docs often include a tutorial that can help you get started, and learning to read documentation is crucial to your success as a developer.
 
-## Asking For Help
+<!-- ## Asking For Help
 
 ### In-person Support
 
@@ -120,7 +120,7 @@ When you submit an issue please include the following:
 
 > [Check here for details on this process](asking-for-help.md).
 
-We also strongly recommend **using Slack to get help from your classmates**. Chances are you all will be running into similar problems.
+We also strongly recommend **using Slack to get help from your classmates**. Chances are you all will be running into similar problems. -->
 
 ## A Note on Plagiarism
 
