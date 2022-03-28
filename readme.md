@@ -21,7 +21,7 @@ Show us what you've got!
 - Built mobile first 
 - Implement responsive design using flexbox, grid, or another css framework.
 - Use React Hooks
-- Be deployed via [Netlify](https://www.netlify.com/), [Vercel](https://www.vercel.com) or [Render](https://www.render.com).
+<!-- - Be deployed via [Netlify](https://www.netlify.com/), [Vercel](https://www.vercel.com) or [Render](https://www.render.com). -->
 
 ### Previous Student Projects
 
